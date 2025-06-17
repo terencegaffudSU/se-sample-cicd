@@ -26,7 +26,19 @@ jobs:
       - run: |
           echo "Run tests..."
           npm run test
-# TODO: add publish job
+  publish:
+    executor: docker/docker 
+    steps:
+      - setup_remote_docker
+      - checkout
+      - docker/check
+      - docker/build: #builds the image, similar to docker build -t "name:tag" .
+          image: terencegaffudsu/tamkeen-software
+          tag: v1.0.2
+      - docker/push: #pushes the image to specified account in the environment variables
+          image: terencegaffudsu/tamkeen-software
+          tag: v1.0.2
+
 
 # workflow
 workflows:
@@ -37,4 +49,7 @@ workflows:
       - test:
           requires:
             - build
+      - publish:
+          requires:
+            - test
 
