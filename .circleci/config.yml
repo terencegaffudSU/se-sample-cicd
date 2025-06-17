@@ -1,0 +1,40 @@
+version: 2.1
+
+# orbs
+orbs:
+  node: circleci/node@5.0.1
+
+# jobs
+jobs:
+  build:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run: |
+          echo "Installing dependencies..."
+          npm install
+  test:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run: |
+          echo "Run tests..."
+          npm run test
+# TODO: add publish job
+
+# workflow
+workflows:
+  # Name of the workflow is simple_workflow
+  simple_workflow:
+    jobs:
+      - build
+      - test:
+        requires:
+          - build
+
