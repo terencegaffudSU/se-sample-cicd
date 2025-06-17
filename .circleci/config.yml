@@ -35,10 +35,10 @@ jobs:
       - docker/check
       - docker/build: #builds the image, similar to docker build -t "name:tag" .
           image: terencegaffudsu/tamkeen-software
-          tag: v1.0.2
+          tag: v1.0.3
       - docker/push: #pushes the image to specified account in the environment variables
           image: terencegaffudsu/tamkeen-software
-          tag: v1.0.2
+          tag: v1.0.3
 
 
 # workflow
