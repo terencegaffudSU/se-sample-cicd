@@ -39,6 +39,16 @@ jobs:
       - docker/push: #pushes the image to specified account in the environment variables
           image: terencegaffudsu/tamkeen-software
           tag: v1.0.3
+  deploy:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Render push
+          command: |
+            curl "https://api.render.com/deploy/srv-d1a192be5dus73e48psg?key=ohyQg3b5H7w"
 
 
 # workflow
@@ -53,4 +63,7 @@ workflows:
       - publish:
           requires:
             - test
+      - deploy:
+          requires:
+            - publish
 
