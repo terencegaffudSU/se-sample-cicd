@@ -4,6 +4,7 @@ version: 2.1
 orbs:
   node: circleci/node@5.0.1
   docker: circleci/docker@2.8.2
+  snyk: snyk/snyk@1.5.0
 
 # jobs
 jobs:
@@ -49,6 +50,18 @@ jobs:
           name: Render push
           command: |
             curl "https://api.render.com/deploy/srv-d1a192be5dus73e48psg?key=ohyQg3b5H7w"
+  scan:
+    docker:
+      - image: cimg/node:16.10
+    environment:
+      IMAGE_NAME: terencegaffudsu/tamkeen-software
+    steps:
+      - checkout
+      - setup_remote_docker
+      - docker/check
+      - run: docker build -t $IMAGE_NAME .
+      - snyk/scan:
+          docker-image-name: $IMAGE_NAME
 
 
 # workflow
@@ -63,7 +76,10 @@ workflows:
       - publish:
           requires:
             - test
-      - deploy:
+      # - deploy:
+      #     requires:
+      #       - test
+      - scan:
           requires:
-            - test
+            - build
 
