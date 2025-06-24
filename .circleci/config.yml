@@ -64,6 +64,19 @@ jobs:
           docker-image-name: $IMAGE_NAME
           severity-threshold: high
           fail-on-issues: false
+  codescan:
+    docker:
+      - image: cimg/node:16.10
+    environment:
+      IMAGE_NAME: terencegaffudsu/tamkeen-software
+    steps:
+      - checkout
+      - setup_remote_docker
+      - docker/check
+      - run: docker build -t $IMAGE_NAME .
+      - snyk/install
+      - run: |
+          snyk code test
 
 
 # workflow
@@ -81,7 +94,7 @@ workflows:
       # - deploy:
       #     requires:
       #       - test
-      - scan:
+      - codescan:
           requires:
             - build
 
